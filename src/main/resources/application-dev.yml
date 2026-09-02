@@ -1,0 +1,15 @@
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+      auto-index-creation: true
+
+app:
+  seed:
+    enabled: ${APP_SEED_ENABLED:true}
+
+logging:
+  level:
+    com.project_kata.global_invoices_kata_mngr: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
