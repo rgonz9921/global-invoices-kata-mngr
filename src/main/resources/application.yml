@@ -6,6 +6,10 @@ spring:
   data:
     mongodb:
       database: ${MONGODB_DATABASE:global_invoices}
+    web:
+      pageable:
+        max-page-size: 100
+        default-page-size: 20
   threads:
     virtual:
       enabled: true

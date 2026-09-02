@@ -1,0 +1,57 @@
+package com.project_kata.global_invoices_kata_mngr.domain.service;
+
+import com.project_kata.global_invoices_kata_mngr.domain.dto.CreateInvoiceRequest;
+import com.project_kata.global_invoices_kata_mngr.domain.dto.InvoiceResponse;
+import com.project_kata.global_invoices_kata_mngr.domain.dto.PageResponse;
+import com.project_kata.global_invoices_kata_mngr.domain.exception.InvoiceNotFoundException;
+import com.project_kata.global_invoices_kata_mngr.domain.model.Invoice;
+import com.project_kata.global_invoices_kata_mngr.domain.model.InvoiceTotals;
+import com.project_kata.global_invoices_kata_mngr.domain.model.InvoiceType;
+import com.project_kata.global_invoices_kata_mngr.domain.tax.TaxStrategyFactory;
+import com.project_kata.global_invoices_kata_mngr.infrastructure.persistence.InvoiceRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class InvoiceServiceImpl implements IInvoiceService {
+
+    private final InvoiceRepository invoiceRepository;
+    private final TaxStrategyFactory taxStrategyFactory;
+
+    @Override
+    public InvoiceResponse create(CreateInvoiceRequest request) {
+        InvoiceTotals totals = taxStrategyFactory.getStrategy(request.type()).calculate(request.subtotal());
+
+        Invoice invoice = Invoice.builder()
+                .type(request.type())
+                .concepto(request.concepto().trim())
+                .subtotal(request.subtotal())
+                .codigoAduanero(normalize(request.codigoAduanero()))
+                .totals(totals)
+                .build();
+
+        return InvoiceResponse.from(invoiceRepository.save(invoice));
+    }
+
+    @Override
+    public PageResponse<InvoiceResponse> list(InvoiceType type, Pageable pageable) {
+        Page<Invoice> page = (type == null)
+                ? invoiceRepository.findAll(pageable)
+                : invoiceRepository.findByType(type, pageable);
+        return PageResponse.of(page, InvoiceResponse::from);
+    }
+
+    @Override
+    public InvoiceResponse getById(String id) {
+        return invoiceRepository.findById(id)
+                .map(InvoiceResponse::from)
+                .orElseThrow(() -> new InvoiceNotFoundException(id));
+    }
+
+    private static String normalize(String value) {
+        return (value == null || value.isBlank()) ? null : value.trim();
+    }
+}
