@@ -1,6 +1,7 @@
 package com.project_kata.global_invoices_kata_mngr.infrastructure.exception;
 
 import com.project_kata.global_invoices_kata_mngr.domain.dto.ApiError;
+import com.project_kata.global_invoices_kata_mngr.domain.exception.InvoiceNotFoundException;
 import com.project_kata.global_invoices_kata_mngr.domain.exception.UnsupportedInvoiceTypeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UnsupportedInvoiceTypeException.class)
     public ResponseEntity<ApiError> handleUnsupportedInvoiceType(UnsupportedInvoiceTypeException ex) {
         return build(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvoiceNotFoundException.class)
+    public ResponseEntity<ApiError> handleInvoiceNotFound(InvoiceNotFoundException ex) {
+        return build(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
