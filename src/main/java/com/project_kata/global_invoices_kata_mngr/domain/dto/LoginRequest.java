@@ -3,9 +3,6 @@ package com.project_kata.global_invoices_kata_mngr.domain.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-/**
- * Credenciales de acceso enviadas a {@code POST /api/v1/auth/login}.
- */
 public record LoginRequest(
 
         @NotBlank(message = "El email es obligatorio")

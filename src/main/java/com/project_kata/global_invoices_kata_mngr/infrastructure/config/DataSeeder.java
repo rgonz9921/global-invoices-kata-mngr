@@ -12,10 +12,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-/**
- * Crea los usuarios demo OPERADOR y AUDITOR al arranque cuando {@code app.seed.enabled=true}
- * (perfil dev). Idempotente: no duplica si ya existen.
- */
 @Component
 @ConditionalOnProperty(prefix = "app.seed", name = "enabled", havingValue = "true")
 @RequiredArgsConstructor

@@ -13,10 +13,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-/**
- * Responde 401 en JSON (formato {@link ApiError}) cuando se accede a un recurso protegido
- * sin autenticacion valida.
- */
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {

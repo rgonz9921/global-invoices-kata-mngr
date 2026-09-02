@@ -16,7 +16,7 @@ public class UserController {
 
     private final IUserService userService;
 
-    /** Datos del usuario autenticado (para que el frontend pinte menu/guards segun rol). */
+    /** Datos del usuario autenticado */
     @GetMapping("/me")
     public CurrentUserResponse me(@AuthenticationPrincipal UserDetails principal) {
         return userService.getCurrent(principal.getUsername());

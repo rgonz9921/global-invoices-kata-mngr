@@ -8,10 +8,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-/**
- * Puente entre el documento {@link User} de Mongo y el {@link UserDetails} de Spring Security.
- * El rol se expone como autoridad {@code ROLE_<NOMBRE>} (Spring antepone el prefijo).
- */
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsServiceImpl implements UserDetailsService {

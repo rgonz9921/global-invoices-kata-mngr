@@ -17,10 +17,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- * Traduce excepciones a respuestas {@link ApiError} uniformes.
- * Los mensajes de auth son deliberadamente genericos (no revelan si fallo el email o la contrasena).
- */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

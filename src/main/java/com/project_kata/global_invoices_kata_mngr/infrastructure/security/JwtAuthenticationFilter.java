@@ -19,12 +19,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-/**
- * Traduce un header {@code Authorization: Bearer <jwt>} a una autenticacion de Spring Security.
- * <p>A diferencia del filtro del repo de referencia, cualquier fallo al parsear el token
- * (invalido, expirado, usuario inexistente) se traga y se continua la cadena <b>sin</b>
- * autenticacion: el {@link JwtAuthenticationEntryPoint} responde 401 JSON. Nunca 500.
- */
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {

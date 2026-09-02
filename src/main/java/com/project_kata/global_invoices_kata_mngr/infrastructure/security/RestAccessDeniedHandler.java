@@ -13,7 +13,6 @@ import java.io.IOException;
 
 /**
  * Responde 403 en JSON cuando un usuario autenticado intenta una operacion que su rol no permite
- * (los dos casos negativos de RF-05: OPERADOR en Dashboard, AUDITOR creando factura).
  */
 @Component
 @RequiredArgsConstructor

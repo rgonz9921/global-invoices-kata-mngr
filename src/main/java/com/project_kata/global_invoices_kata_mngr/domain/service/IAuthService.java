@@ -7,8 +7,6 @@ public interface IAuthService {
 
     /**
      * Valida credenciales y emite un access token JWT.
-     *
-     * @throws org.springframework.security.authentication.BadCredentialsException si el email o la contrasena no coinciden
      */
     LoginResponse login(LoginRequest request);
 }

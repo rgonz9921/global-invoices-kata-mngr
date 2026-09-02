@@ -13,12 +13,6 @@ import javax.crypto.SecretKey;
 import java.time.Instant;
 import java.util.Date;
 
-/**
- * Emision y verificacion de access tokens JWT (HS256).
- * <p>El token lleva el email en {@code sub} y el rol en el claim {@code role},
- * de modo que la autorizacion no obliga a recargar el rol de la BD en cada request.
- * Usa la API moderna de jjwt 0.12 ({@code verifyWith}/{@code parseSignedClaims}).
- */
 @Service
 public class JwtService {
 
@@ -43,7 +37,6 @@ public class JwtService {
                 .compact();
     }
 
-    /** Verifica firma y expiracion. Lanza {@link io.jsonwebtoken.JwtException} si el token no es valido. */
     public Jws<Claims> parse(String token) {
         return Jwts.parser()
                 .verifyWith(key)
