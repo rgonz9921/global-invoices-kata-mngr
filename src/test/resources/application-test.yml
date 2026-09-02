@@ -1,0 +1,27 @@
+spring:
+  data:
+    mongodb:
+      database: global_invoices_test
+      auto-index-creation: true
+      # Sin 'uri': flapdoodle (de.flapdoodle.embed.mongo.spring3x) levanta un Mongo embebido para los tests.
+
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 7.0.14
+
+jwt:
+  secret: Z2xvYmFsLWludm9pY2UtdGVzdC1zaWduaW5nLWtleS1kby1ub3QtdXNlLWluLXByb2QtMDEyMzQ1Njc4OQ==
+  expiration-ms: 3600000
+
+app:
+  cors:
+    allowed-origins: http://localhost:4200
+  seed:
+    enabled: false
+
+logging:
+  level:
+    de.flapdoodle: WARN
+    org.mongodb.driver: WARN

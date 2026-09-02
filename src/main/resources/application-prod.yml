@@ -1,0 +1,15 @@
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+      auto-index-creation: false
+
+app:
+  seed:
+    enabled: ${APP_SEED_ENABLED:false}
+
+logging:
+  level:
+    root: INFO
+    com.project_kata.global_invoices_kata_mngr: INFO
+    org.springframework.security: WARN
