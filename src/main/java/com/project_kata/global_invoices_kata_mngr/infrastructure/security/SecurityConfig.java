@@ -49,6 +49,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
+                        // crear factura y previsualizar totales -> solo OPERADOR
+                        .requestMatchers(HttpMethod.POST, "/api/v1/invoices/**").hasRole("OPERADOR")
+                        // listar y ver detalle de facturas -> OPERADOR y AUDITOR
+                        .requestMatchers(HttpMethod.GET, "/api/v1/invoices/**").hasAnyRole("OPERADOR", "AUDITOR")
+                        //dashboard -> solo AUDITOR (endpoint real en Inc. 5)
+                        .requestMatchers("/api/v1/dashboard/**").hasRole("AUDITOR")
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(authenticationEntryPoint)

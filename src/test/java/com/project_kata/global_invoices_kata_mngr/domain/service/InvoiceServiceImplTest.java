@@ -1,12 +1,14 @@
 package com.project_kata.global_invoices_kata_mngr.domain.service;
 
 import com.project_kata.global_invoices_kata_mngr.domain.dto.CreateInvoiceRequest;
+import com.project_kata.global_invoices_kata_mngr.domain.dto.InvoiceDetailResponse;
 import com.project_kata.global_invoices_kata_mngr.domain.dto.InvoiceResponse;
 import com.project_kata.global_invoices_kata_mngr.domain.dto.PageResponse;
 import com.project_kata.global_invoices_kata_mngr.domain.exception.InvoiceNotFoundException;
 import com.project_kata.global_invoices_kata_mngr.domain.model.Invoice;
 import com.project_kata.global_invoices_kata_mngr.domain.model.InvoiceTotals;
 import com.project_kata.global_invoices_kata_mngr.domain.model.InvoiceType;
+import com.project_kata.global_invoices_kata_mngr.domain.port.NumberToTextConverter;
 import com.project_kata.global_invoices_kata_mngr.domain.tax.TaxStrategy;
 import com.project_kata.global_invoices_kata_mngr.domain.tax.TaxStrategyFactory;
 import com.project_kata.global_invoices_kata_mngr.infrastructure.persistence.InvoiceRepository;
@@ -41,6 +43,8 @@ class InvoiceServiceImplTest {
     private TaxStrategyFactory taxStrategyFactory;
     @Mock
     private TaxStrategy strategy;
+    @Mock
+    private NumberToTextConverter numberToTextConverter;
 
     @InjectMocks
     private InvoiceServiceImpl service;
@@ -110,19 +114,36 @@ class InvoiceServiceImplTest {
     }
 
     @Test
-    void getByIdReturnsResponseWhenFound() {
+    void getDetailIncludesMontoEnLetrasWhenConverterSucceeds() {
         when(invoiceRepository.findById("abc")).thenReturn(Optional.of(sampleInvoice()));
+        when(numberToTextConverter.toText(new BigDecimal("1190.00")))
+                .thenReturn(Optional.of("one thousand one hundred and ninety"));
 
-        assertThat(service.getById("abc").id()).isEqualTo("abc");
+        InvoiceDetailResponse detail = service.getDetail("abc");
+
+        assertThat(detail.id()).isEqualTo("abc");
+        assertThat(detail.montoEnLetras()).isEqualTo("one thousand one hundred and ninety");
+        assertThat(detail.conversionLetrasDisponible()).isTrue();
     }
 
     @Test
-    void getByIdThrowsWhenMissing() {
+    void getDetailFallsBackWhenConverterFails() {
+        when(invoiceRepository.findById("abc")).thenReturn(Optional.of(sampleInvoice()));
+        when(numberToTextConverter.toText(any(BigDecimal.class))).thenReturn(Optional.empty());
+
+        InvoiceDetailResponse detail = service.getDetail("abc");
+
+        assertThat(detail.montoEnLetras()).isNull();
+        assertThat(detail.conversionLetrasDisponible()).isFalse();
+    }
+
+    @Test
+    void getDetailThrowsWhenMissing() {
         when(invoiceRepository.findById("nope")).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> service.getById("nope"))
+        assertThatThrownBy(() -> service.getDetail("nope"))
                 .isInstanceOf(InvoiceNotFoundException.class);
-        verifyNoInteractions(taxStrategyFactory);
+        verifyNoInteractions(numberToTextConverter);
     }
 
     private Invoice sampleInvoice() {

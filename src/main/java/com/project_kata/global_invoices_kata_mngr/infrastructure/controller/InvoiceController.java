@@ -3,6 +3,7 @@ package com.project_kata.global_invoices_kata_mngr.infrastructure.controller;
 import com.project_kata.global_invoices_kata_mngr.domain.dto.CalculateInvoiceRequest;
 import com.project_kata.global_invoices_kata_mngr.domain.dto.CalculationResponse;
 import com.project_kata.global_invoices_kata_mngr.domain.dto.CreateInvoiceRequest;
+import com.project_kata.global_invoices_kata_mngr.domain.dto.InvoiceDetailResponse;
 import com.project_kata.global_invoices_kata_mngr.domain.dto.InvoiceResponse;
 import com.project_kata.global_invoices_kata_mngr.domain.dto.PageResponse;
 import com.project_kata.global_invoices_kata_mngr.domain.model.InvoiceType;
@@ -30,14 +31,11 @@ public class InvoiceController {
 
     private final IInvoiceCalculationService invoiceCalculationService;
     private final IInvoiceService invoiceService;
-
-    // TODO Inc.3: restringir a hasRole('OPERADOR')
     @PostMapping("/calculate")
     public CalculationResponse calculate(@Valid @RequestBody CalculateInvoiceRequest request) {
         return invoiceCalculationService.calculate(request);
     }
 
-    // TODO Inc.3: restringir a hasRole('OPERADOR')
     @PostMapping
     public ResponseEntity<InvoiceResponse> create(@Valid @RequestBody CreateInvoiceRequest request,
                                                   UriComponentsBuilder uriBuilder) {
@@ -54,7 +52,7 @@ public class InvoiceController {
     }
 
     @GetMapping("/{id}")
-    public InvoiceResponse getById(@PathVariable String id) {
-        return invoiceService.getById(id);
+    public InvoiceDetailResponse getDetail(@PathVariable String id) {
+        return invoiceService.getDetail(id);
     }
 }

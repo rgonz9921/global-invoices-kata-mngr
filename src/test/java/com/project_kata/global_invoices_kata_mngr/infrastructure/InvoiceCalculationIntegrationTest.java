@@ -1,20 +1,11 @@
 package com.project_kata.global_invoices_kata_mngr.infrastructure;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project_kata.global_invoices_kata_mngr.domain.dto.CalculationResponse;
 import com.project_kata.global_invoices_kata_mngr.domain.model.InvoiceType;
 import com.project_kata.global_invoices_kata_mngr.domain.model.TypeRoleUser;
-import com.project_kata.global_invoices_kata_mngr.domain.model.User;
-import com.project_kata.global_invoices_kata_mngr.infrastructure.persistence.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -23,40 +14,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-class InvoiceCalculationIntegrationTest {
-
-    private static final String EMAIL = "operador@globalinvoice.com";
-    private static final String PASSWORD = "Operador123!";
-
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private ObjectMapper objectMapper;
+class InvoiceCalculationIntegrationTest extends AbstractIntegrationTest {
 
     private String bearer;
 
     @BeforeEach
-    void setUp() throws Exception {
-        userRepository.deleteAll();
-        userRepository.save(User.builder()
-                .name("Operador Demo").email(EMAIL)
-                .password(passwordEncoder.encode(PASSWORD))
-                .role(TypeRoleUser.OPERADOR).build());
-
-        MvcResult login = mockMvc.perform(post("/api/v1/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"%s\",\"password\":\"%s\"}".formatted(EMAIL, PASSWORD)))
-                .andExpect(status().isOk())
-                .andReturn();
-        bearer = "Bearer " + objectMapper.readTree(login.getResponse().getContentAsString())
-                .get("accessToken").asText();
+    void loginAsOperador() throws Exception {
+        bearer = seedAndLogin(OPERADOR_EMAIL, OPERADOR_PASSWORD, TypeRoleUser.OPERADOR);
     }
 
     private ResultActions calculate(String body) throws Exception {

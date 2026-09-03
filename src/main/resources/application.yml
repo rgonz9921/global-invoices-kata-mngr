@@ -34,6 +34,11 @@ jwt:
 app:
   cors:
     allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
+  soap:
+    number-conversion:
+      url: ${SOAP_NUMBER_CONVERSION_URL:https://www.dataaccess.com/webservicesserver/NumberConversion.wso}
+      connect-timeout: 2s
+      read-timeout: 4s
   seed:
     enabled: ${APP_SEED_ENABLED:false}
     operador:
