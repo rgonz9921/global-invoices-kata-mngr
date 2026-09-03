@@ -8,6 +8,16 @@ app:
   seed:
     enabled: ${APP_SEED_ENABLED:false}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ${MANAGEMENT_ENDPOINTS_EXPOSURE:health}
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
 logging:
   level:
     root: INFO
