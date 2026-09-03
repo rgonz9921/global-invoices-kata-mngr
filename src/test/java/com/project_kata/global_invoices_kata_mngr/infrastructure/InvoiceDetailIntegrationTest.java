@@ -28,7 +28,7 @@ class InvoiceDetailIntegrationTest extends AbstractIntegrationTest {
         String body = mockMvc.perform(post("/api/v1/invoices")
                         .header("Authorization", bearer)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"type\":\"NACIONAL\",\"concepto\":\"Consultoria\",\"subtotal\":1000}"))
+                        .content("{\"type\":\"NACIONAL\",\"description\":\"Consultoria\",\"subtotal\":1000}"))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
         return objectMapper.readTree(body).get("id").asText();
@@ -43,8 +43,8 @@ class InvoiceDetailIntegrationTest extends AbstractIntegrationTest {
         mockMvc.perform(get("/api/v1/invoices/{id}", id).header("Authorization", bearer))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totals.total").value(1190.00))
-                .andExpect(jsonPath("$.montoEnLetras").value("one thousand one hundred and ninety"))
-                .andExpect(jsonPath("$.conversionLetrasDisponible").value(true));
+                .andExpect(jsonPath("$.amountInWords").value("one thousand one hundred and ninety"))
+                .andExpect(jsonPath("$.amountInWordsAvailable").value(true));
     }
 
     @Test
@@ -55,7 +55,7 @@ class InvoiceDetailIntegrationTest extends AbstractIntegrationTest {
         mockMvc.perform(get("/api/v1/invoices/{id}", id).header("Authorization", bearer))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totals.total").value(1190.00))
-                .andExpect(jsonPath("$.conversionLetrasDisponible").value(false))
-                .andExpect(jsonPath("$.montoEnLetras").doesNotExist());
+                .andExpect(jsonPath("$.amountInWordsAvailable").value(false))
+                .andExpect(jsonPath("$.amountInWords").doesNotExist());
     }
 }

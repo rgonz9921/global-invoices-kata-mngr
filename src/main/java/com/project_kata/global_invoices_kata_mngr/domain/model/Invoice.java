@@ -9,6 +9,8 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -27,12 +29,13 @@ public class Invoice {
     private InvoiceType type;
 
     /** Descripcion de la linea facturada (ej. "Consultoria mensual"). */
-    private String concepto;
+    private String description;
 
+    @Field(targetType = FieldType.DECIMAL128)
     private BigDecimal subtotal;
 
     /** Solo presente para facturas de EXPORTACION (RF-02). */
-    private String codigoAduanero;
+    private String customsCode;
 
     /** Totales calculados por el motor tributario y persistidos. */
     private InvoiceTotals totals;

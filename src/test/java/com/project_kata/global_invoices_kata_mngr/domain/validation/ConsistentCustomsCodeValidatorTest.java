@@ -46,7 +46,7 @@ class ConsistentCustomsCodeValidatorTest {
         var violations = validate(InvoiceType.EXPORTACION, "   ");
 
         assertThat(violations).hasSize(1);
-        assertThat(violations.iterator().next().getPropertyPath()).hasToString("codigoAduanero");
+        assertThat(violations.iterator().next().getPropertyPath()).hasToString("customsCode");
     }
 
     @Test
@@ -54,7 +54,7 @@ class ConsistentCustomsCodeValidatorTest {
         var violations = validate(InvoiceType.NACIONAL, "COL-12345");
 
         assertThat(violations).hasSize(1);
-        assertThat(violations.iterator().next().getPropertyPath()).hasToString("codigoAduanero");
+        assertThat(violations.iterator().next().getPropertyPath()).hasToString("customsCode");
     }
 
     @Test

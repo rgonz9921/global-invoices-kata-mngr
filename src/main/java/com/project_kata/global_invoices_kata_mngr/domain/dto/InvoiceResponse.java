@@ -10,9 +10,9 @@ import java.time.Instant;
 public record InvoiceResponse(
         String id,
         InvoiceType type,
-        String concepto,
+        String description,
         BigDecimal subtotal,
-        String codigoAduanero,
+        String customsCode,
         InvoiceTotals totals,
         Instant createdAt,
         String createdBy
@@ -21,9 +21,9 @@ public record InvoiceResponse(
         return new InvoiceResponse(
                 invoice.getId(),
                 invoice.getType(),
-                invoice.getConcepto(),
+                invoice.getDescription(),
                 invoice.getSubtotal(),
-                invoice.getCodigoAduanero(),
+                invoice.getCustomsCode(),
                 invoice.getTotals(),
                 invoice.getCreatedAt(),
                 invoice.getCreatedBy());

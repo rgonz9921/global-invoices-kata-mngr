@@ -8,7 +8,7 @@ import jakarta.validation.ConstraintValidatorContext;
 public class ConsistentCustomsCodeValidator
         implements ConstraintValidator<ConsistentCustomsCode, CreateInvoiceRequest> {
 
-    private static final String FIELD = "codigoAduanero";
+    private static final String FIELD = "customsCode";
 
     @Override
     public boolean isValid(CreateInvoiceRequest request, ConstraintValidatorContext context) {
@@ -16,7 +16,7 @@ public class ConsistentCustomsCodeValidator
             return true;
         }
 
-        boolean present = request.codigoAduanero() != null && !request.codigoAduanero().isBlank();
+        boolean present = request.customsCode() != null && !request.customsCode().isBlank();
         boolean isExport = request.type() == InvoiceType.EXPORTACION;
 
         if (isExport && !present) {

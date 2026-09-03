@@ -14,7 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class RbacIntegrationTest extends AbstractIntegrationTest {
 
     private static final String VALID_INVOICE =
-            "{\"type\":\"NACIONAL\",\"concepto\":\"Consultoria\",\"subtotal\":1000}";
+            "{\"type\":\"NACIONAL\",\"description\":\"Consultoria\",\"subtotal\":1000}";
 
     private String operador;
     private String auditor;
@@ -84,9 +84,9 @@ class RbacIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void auditorPassesDashboardSecurityButEndpointIsNotYetImplemented() throws Exception {
+    void auditorCanAccessDashboard() throws Exception {
         mockMvc.perform(get("/api/v1/dashboard/summary").header("Authorization", auditor))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isOk());
     }
 
     @Test

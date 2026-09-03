@@ -71,10 +71,10 @@ class InvoiceServiceImplTest {
         verify(invoiceRepository).save(captor.capture());
         Invoice saved = captor.getValue();
         assertThat(saved.getType()).isEqualTo(InvoiceType.NACIONAL);
-        assertThat(saved.getConcepto()).isEqualTo("Consultoria mensual");
+        assertThat(saved.getDescription()).isEqualTo("Consultoria mensual");
         assertThat(saved.getTotals()).isEqualTo(totals);
-        assertThat(saved.getCodigoAduanero()).isNull();
-        assertThat(response.concepto()).isEqualTo("Consultoria mensual");
+        assertThat(saved.getCustomsCode()).isNull();
+        assertThat(response.description()).isEqualTo("Consultoria mensual");
         assertThat(response.totals().total()).isEqualByComparingTo("1190.00");
     }
 
@@ -87,7 +87,7 @@ class InvoiceServiceImplTest {
 
         ArgumentCaptor<Invoice> captor = ArgumentCaptor.forClass(Invoice.class);
         verify(invoiceRepository).save(captor.capture());
-        assertThat(captor.getValue().getCodigoAduanero()).isEqualTo("COL-9");
+        assertThat(captor.getValue().getCustomsCode()).isEqualTo("COL-9");
     }
 
     @Test
@@ -122,8 +122,8 @@ class InvoiceServiceImplTest {
         InvoiceDetailResponse detail = service.getDetail("abc");
 
         assertThat(detail.id()).isEqualTo("abc");
-        assertThat(detail.montoEnLetras()).isEqualTo("one thousand one hundred and ninety");
-        assertThat(detail.conversionLetrasDisponible()).isTrue();
+        assertThat(detail.amountInWords()).isEqualTo("one thousand one hundred and ninety");
+        assertThat(detail.amountInWordsAvailable()).isTrue();
     }
 
     @Test
@@ -133,8 +133,8 @@ class InvoiceServiceImplTest {
 
         InvoiceDetailResponse detail = service.getDetail("abc");
 
-        assertThat(detail.montoEnLetras()).isNull();
-        assertThat(detail.conversionLetrasDisponible()).isFalse();
+        assertThat(detail.amountInWords()).isNull();
+        assertThat(detail.amountInWordsAvailable()).isFalse();
     }
 
     @Test
