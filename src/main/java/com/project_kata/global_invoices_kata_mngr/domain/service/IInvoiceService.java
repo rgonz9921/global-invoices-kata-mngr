@@ -1,6 +1,7 @@
 package com.project_kata.global_invoices_kata_mngr.domain.service;
 
 import com.project_kata.global_invoices_kata_mngr.domain.dto.CreateInvoiceRequest;
+import com.project_kata.global_invoices_kata_mngr.domain.dto.InvoiceDetailResponse;
 import com.project_kata.global_invoices_kata_mngr.domain.dto.InvoiceResponse;
 import com.project_kata.global_invoices_kata_mngr.domain.dto.PageResponse;
 import com.project_kata.global_invoices_kata_mngr.domain.model.InvoiceType;
@@ -12,5 +13,5 @@ public interface IInvoiceService {
 
     PageResponse<InvoiceResponse> list(InvoiceType type, Pageable pageable);
 
-    InvoiceResponse getById(String id);
+    InvoiceDetailResponse getDetail(String id);
 }

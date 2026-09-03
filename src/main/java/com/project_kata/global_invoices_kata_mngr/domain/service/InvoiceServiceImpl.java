@@ -1,12 +1,14 @@
 package com.project_kata.global_invoices_kata_mngr.domain.service;
 
 import com.project_kata.global_invoices_kata_mngr.domain.dto.CreateInvoiceRequest;
+import com.project_kata.global_invoices_kata_mngr.domain.dto.InvoiceDetailResponse;
 import com.project_kata.global_invoices_kata_mngr.domain.dto.InvoiceResponse;
 import com.project_kata.global_invoices_kata_mngr.domain.dto.PageResponse;
 import com.project_kata.global_invoices_kata_mngr.domain.exception.InvoiceNotFoundException;
 import com.project_kata.global_invoices_kata_mngr.domain.model.Invoice;
 import com.project_kata.global_invoices_kata_mngr.domain.model.InvoiceTotals;
 import com.project_kata.global_invoices_kata_mngr.domain.model.InvoiceType;
+import com.project_kata.global_invoices_kata_mngr.domain.port.NumberToTextConverter;
 import com.project_kata.global_invoices_kata_mngr.domain.tax.TaxStrategyFactory;
 import com.project_kata.global_invoices_kata_mngr.infrastructure.persistence.InvoiceRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 
     private final InvoiceRepository invoiceRepository;
     private final TaxStrategyFactory taxStrategyFactory;
+    private final NumberToTextConverter numberToTextConverter;
 
     @Override
     public InvoiceResponse create(CreateInvoiceRequest request) {
@@ -45,10 +48,11 @@ public class InvoiceServiceImpl implements IInvoiceService {
     }
 
     @Override
-    public InvoiceResponse getById(String id) {
-        return invoiceRepository.findById(id)
-                .map(InvoiceResponse::from)
+    public InvoiceDetailResponse getDetail(String id) {
+        Invoice invoice = invoiceRepository.findById(id)
                 .orElseThrow(() -> new InvoiceNotFoundException(id));
+        String montoEnLetras = numberToTextConverter.toText(invoice.getTotals().total()).orElse(null);
+        return InvoiceDetailResponse.from(invoice, montoEnLetras);
     }
 
     private static String normalize(String value) {
