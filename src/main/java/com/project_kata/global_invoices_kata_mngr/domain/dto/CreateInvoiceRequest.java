@@ -15,14 +15,14 @@ public record CreateInvoiceRequest(
         @NotNull(message = "El tipo de factura es obligatorio")
         InvoiceType type,
 
-        @NotBlank(message = "El concepto es obligatorio")
-        @Size(max = 200, message = "El concepto no puede superar los 200 caracteres")
-        String concepto,
+        @NotBlank(message = "La descripcion es obligatoria")
+        @Size(max = 200, message = "La descripcion no puede superar los 200 caracteres")
+        String description,
 
         @NotNull(message = "El subtotal es obligatorio")
         @Positive(message = "El subtotal debe ser mayor que cero")
         BigDecimal subtotal,
 
-        String codigoAduanero
+        String customsCode
 ) {
 }

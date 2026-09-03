@@ -39,10 +39,10 @@ class InvoicePersistenceIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void createsNacionalInvoiceWithComputedTotalsAndAudit() throws Exception {
-        JsonNode invoice = createOk("{\"type\":\"NACIONAL\",\"concepto\":\"Consultoria mensual\",\"subtotal\":1000}");
+        JsonNode invoice = createOk("{\"type\":\"NACIONAL\",\"description\":\"Consultoria mensual\",\"subtotal\":1000}");
 
         assertThat(invoice.get("id").asText()).isNotBlank();
-        assertThat(invoice.get("concepto").asText()).isEqualTo("Consultoria mensual");
+        assertThat(invoice.get("description").asText()).isEqualTo("Consultoria mensual");
         assertThat(invoice.path("totals").path("total").asDouble()).isEqualTo(1190.00);
         assertThat(invoice.get("createdBy").asText()).isEqualTo(EMAIL);
         assertThat(invoice.get("createdAt").isNull()).isFalse();
@@ -50,38 +50,38 @@ class InvoicePersistenceIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void rejectsBlankConcepto() throws Exception {
-        create("{\"type\":\"NACIONAL\",\"concepto\":\"  \",\"subtotal\":1000}")
+    void rejectsBlankDescription() throws Exception {
+        create("{\"type\":\"NACIONAL\",\"description\":\"  \",\"subtotal\":1000}")
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.fields.concepto").isNotEmpty());
+                .andExpect(jsonPath("$.fields.description").isNotEmpty());
     }
 
     @Test
     void rejectsExportacionWithoutCustomsCode() throws Exception {
-        create("{\"type\":\"EXPORTACION\",\"concepto\":\"Exportacion cafe\",\"subtotal\":1000}")
+        create("{\"type\":\"EXPORTACION\",\"description\":\"Exportacion cafe\",\"subtotal\":1000}")
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.fields.codigoAduanero").isNotEmpty());
+                .andExpect(jsonPath("$.fields.customsCode").isNotEmpty());
     }
 
     @Test
     void acceptsExportacionWithCustomsCode() throws Exception {
         JsonNode invoice = createOk(
-                "{\"type\":\"EXPORTACION\",\"concepto\":\"Exportacion cafe\",\"subtotal\":1000,\"codigoAduanero\":\"COL-12345\"}");
+                "{\"type\":\"EXPORTACION\",\"description\":\"Exportacion cafe\",\"subtotal\":1000,\"customsCode\":\"COL-12345\"}");
 
-        assertThat(invoice.get("codigoAduanero").asText()).isEqualTo("COL-12345");
+        assertThat(invoice.get("customsCode").asText()).isEqualTo("COL-12345");
     }
 
     @Test
     void rejectsNonExportacionWithCustomsCode() throws Exception {
-        create("{\"type\":\"NACIONAL\",\"concepto\":\"Consultoria\",\"subtotal\":1000,\"codigoAduanero\":\"COL-1\"}")
+        create("{\"type\":\"NACIONAL\",\"description\":\"Consultoria\",\"subtotal\":1000,\"customsCode\":\"COL-1\"}")
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.fields.codigoAduanero").isNotEmpty());
+                .andExpect(jsonPath("$.fields.customsCode").isNotEmpty());
     }
 
     @Test
     void listsAndFiltersByType() throws Exception {
-        createOk("{\"type\":\"NACIONAL\",\"concepto\":\"Consultoria\",\"subtotal\":1000}");
-        createOk("{\"type\":\"GUBERNAMENTAL\",\"concepto\":\"Contrato estatal\",\"subtotal\":2000}");
+        createOk("{\"type\":\"NACIONAL\",\"description\":\"Consultoria\",\"subtotal\":1000}");
+        createOk("{\"type\":\"GUBERNAMENTAL\",\"description\":\"Contrato estatal\",\"subtotal\":2000}");
 
         mockMvc.perform(get("/api/v1/invoices").header("Authorization", bearer))
                 .andExpect(status().isOk())
@@ -96,7 +96,7 @@ class InvoicePersistenceIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void getsInvoiceByIdAnd404sForUnknown() throws Exception {
-        String id = createOk("{\"type\":\"NACIONAL\",\"concepto\":\"Consultoria\",\"subtotal\":1000}")
+        String id = createOk("{\"type\":\"NACIONAL\",\"description\":\"Consultoria\",\"subtotal\":1000}")
                 .get("id").asText();
 
         mockMvc.perform(get("/api/v1/invoices/{id}", id).header("Authorization", bearer))

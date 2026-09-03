@@ -30,9 +30,9 @@ public class InvoiceServiceImpl implements IInvoiceService {
 
         Invoice invoice = Invoice.builder()
                 .type(request.type())
-                .concepto(request.concepto().trim())
+                .description(request.description().trim())
                 .subtotal(request.subtotal())
-                .codigoAduanero(normalize(request.codigoAduanero()))
+                .customsCode(normalize(request.customsCode()))
                 .totals(totals)
                 .build();
 
@@ -51,8 +51,8 @@ public class InvoiceServiceImpl implements IInvoiceService {
     public InvoiceDetailResponse getDetail(String id) {
         Invoice invoice = invoiceRepository.findById(id)
                 .orElseThrow(() -> new InvoiceNotFoundException(id));
-        String montoEnLetras = numberToTextConverter.toText(invoice.getTotals().total()).orElse(null);
-        return InvoiceDetailResponse.from(invoice, montoEnLetras);
+        String amountInWords = numberToTextConverter.toText(invoice.getTotals().total()).orElse(null);
+        return InvoiceDetailResponse.from(invoice, amountInWords);
     }
 
     private static String normalize(String value) {

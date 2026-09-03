@@ -13,26 +13,26 @@ import java.time.Instant;
 public record InvoiceDetailResponse(
         String id,
         InvoiceType type,
-        String concepto,
+        String description,
         BigDecimal subtotal,
-        String codigoAduanero,
+        String customsCode,
         InvoiceTotals totals,
         Instant createdAt,
         String createdBy,
-        String montoEnLetras,
-        boolean conversionLetrasDisponible
+        String amountInWords,
+        boolean amountInWordsAvailable
 ) {
-    public static InvoiceDetailResponse from(Invoice invoice, String montoEnLetras) {
+    public static InvoiceDetailResponse from(Invoice invoice, String amountInWords) {
         return new InvoiceDetailResponse(
                 invoice.getId(),
                 invoice.getType(),
-                invoice.getConcepto(),
+                invoice.getDescription(),
                 invoice.getSubtotal(),
-                invoice.getCodigoAduanero(),
+                invoice.getCustomsCode(),
                 invoice.getTotals(),
                 invoice.getCreatedAt(),
                 invoice.getCreatedBy(),
-                montoEnLetras,
-                montoEnLetras != null);
+                amountInWords,
+                amountInWords != null);
     }
 }

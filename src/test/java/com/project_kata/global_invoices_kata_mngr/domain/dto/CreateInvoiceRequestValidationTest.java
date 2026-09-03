@@ -30,34 +30,34 @@ class CreateInvoiceRequestValidationTest {
         factory.close();
     }
 
-    private Set<ConstraintViolation<CreateInvoiceRequest>> validate(String concepto) {
+    private Set<ConstraintViolation<CreateInvoiceRequest>> validate(String description) {
         return validator.validate(
-                new CreateInvoiceRequest(InvoiceType.NACIONAL, concepto, new BigDecimal("100"), null));
+                new CreateInvoiceRequest(InvoiceType.NACIONAL, description, new BigDecimal("100"), null));
     }
 
     @Test
-    void acceptsANonBlankConcepto() {
+    void acceptsANonBlankDescription() {
         assertThat(validate("Consultoria mensual")).isEmpty();
     }
 
     @Test
-    void rejectsBlankConcepto() {
+    void rejectsBlankDescription() {
         assertThat(validate("   "))
                 .extracting(v -> v.getPropertyPath().toString())
-                .containsExactly("concepto");
+                .containsExactly("description");
     }
 
     @Test
-    void rejectsNullConcepto() {
+    void rejectsNullDescription() {
         assertThat(validate(null))
                 .extracting(v -> v.getPropertyPath().toString())
-                .containsExactly("concepto");
+                .containsExactly("description");
     }
 
     @Test
-    void rejectsConceptoOver200Chars() {
+    void rejectsDescriptionOver200Chars() {
         assertThat(validate("x".repeat(201)))
                 .extracting(v -> v.getPropertyPath().toString())
-                .containsExactly("concepto");
+                .containsExactly("description");
     }
 }

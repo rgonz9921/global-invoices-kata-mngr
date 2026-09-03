@@ -11,7 +11,7 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * El campo {@code codigoAduanero} es obligatorio para facturas de EXPORTACION y no debe
+ * El campo {@code customsCode} (Codigo Aduanero) es obligatorio para facturas de EXPORTACION y no debe
  * enviarse para el resto de tipos (RF-02).
  */
 @Documented
